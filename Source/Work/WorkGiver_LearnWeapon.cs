@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +55,7 @@ namespace HumanResources
             return actualJob;
         }
 
-        protected virtual bool IsRangeClear(Thing target)
+        private bool IsRangeClear(Thing target)
         {
             CompShootingArea comp = target.TryGetComp<CompShootingArea>();
             if (comp == null) return true;
@@ -95,7 +95,7 @@ namespace HumanResources
             return viable;
         }
 
-        protected Job StartBillJob(Pawn pawn, IBillGiver giver, Bill bill)
+        private Job StartBillJob(Pawn pawn, IBillGiver giver, Bill bill)
         {
             IntRange range = (IntRange)rangeInfo.GetValue(this);
             if (Find.TickManager.TicksGame >= bill.lastIngredientSearchFailTicks + range.RandomInRange || FloatMenuMakerMap.makingFor == pawn)
@@ -112,7 +112,7 @@ namespace HumanResources
             return null;
         }
 
-        protected virtual Job TryStartNewDoBillJob(Pawn pawn, Bill bill, IBillGiver giver)
+        private Job TryStartNewDoBillJob(Pawn pawn, Bill bill, IBillGiver giver)
         {
             Job job = WorkGiverUtility.HaulStuffOffBillGiverJob(pawn, giver, null);
             if (job != null)
