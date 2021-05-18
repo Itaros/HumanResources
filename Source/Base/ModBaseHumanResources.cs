@@ -25,6 +25,7 @@ namespace HumanResources
             EnableJoyGiver,
             ResearchSpeedTiedToDifficulty,
             StudySpeedTiedToDifficulty,
+            OptimizationExperimentalGrowingCache,
             FullStartupReport,
             IndividualTechsReport;
         public static FieldInfo ScenPartThingDefInfo = AccessTools.Field(typeof(ScenPart_ThingCount), "thingDef");
@@ -245,6 +246,7 @@ namespace HumanResources
             EnableJoyGiver = Settings.GetHandle<bool>("EnableJoyGiver", "EnableJoyGiverTitle".Translate(), "EnableJoyGiverDesc".Translate(), true);
             ResearchSpeedTiedToDifficulty = Settings.GetHandle<bool>("ResearchSpeedTiedToDifficulty", "ResearchSpeedTiedToDifficultyTitle".Translate(), "ResearchSpeedTiedToDifficultyDesc".Translate(), true);
             StudySpeedTiedToDifficulty = Settings.GetHandle<bool>("StudySpeedTiedToDifficulty", "StudySpeedTiedToDifficultyTitle".Translate(), "StudySpeedTiedToDifficultyDesc".Translate(), true);
+            OptimizationExperimentalGrowingCache = Settings.GetHandle<bool>("OptimizationExperimentalGrowingCache", "OptimizationExperimentalGrowingCacheTitle".Translate(), "OptimizationExperimentalGrowingCacheDesc".Translate(), true);
             FullStartupReport = Settings.GetHandle<bool>("FullStartupReport", "DEV: Print full startup report", null, false);
             FullStartupReport.NeverVisible = !Prefs.DevMode;
         }

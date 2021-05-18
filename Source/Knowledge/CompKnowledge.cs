@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,6 +34,8 @@ namespace HumanResources
         private List<ThingDef> _craftableWeapons = new List<ThingDef>();
         private List<ResearchProjectDef> _knownTechs;
 
+        private List<ThingDef> m_localCacheAllKnownPlants;
+        
         public IEnumerable<ThingDef> craftableWeapons
         {
             get
@@ -46,12 +48,16 @@ namespace HumanResources
                 return _craftableWeapons;
             }
         }
-
-        public List<ThingDef> knownPlants
+        
+        public IEnumerable<ThingDef> knownPlants
         {
             get
             {
-                return proficientPlants.Concat(UniversalCrops).ToList();
+                if (OptimizationExperimentalGrowingCache)
+                {
+                    return m_localCacheAllKnownPlants;
+                }
+                return proficientPlants.Concat(UniversalCrops);
             }
         }
 
@@ -339,8 +345,16 @@ namespace HumanResources
         public void LearnCrops(ResearchProjectDef tech)
         {
             proficientPlants.AddRange(tech.UnlockedPlants());
+            UpdatePlantCache();
         }
 
+        private void UpdatePlantCache()
+        {
+            m_localCacheAllKnownPlants = proficientPlants == null 
+                ? UniversalCrops.ToList() 
+                : proficientPlants.Concat(UniversalCrops).ToList();
+        }
+        
         public bool LearnTech(ResearchProjectDef tech)
         {
             if (expertise != null)
@@ -390,7 +404,14 @@ namespace HumanResources
             Scribe_Collections.Look(ref fearedWeapons, "fearedWeapons");
             Scribe_Values.Look<TechLevel>(ref techLevel, "techLevel", 0);
             Scribe_Values.Look<TechLevel>(ref startingTechLevel, "startingTechLevel", techLevel);
-            if (Scribe.mode == LoadSaveMode.PostLoadInit && homework == null) homework = new List<ResearchProjectDef>();
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                if(homework == null) // Repair homework queue if not available in save
+                    homework = new List<ResearchProjectDef>();
+                // Prime caches
+                if (OptimizationExperimentalGrowingCache)
+                    UpdatePlantCache();
+            }
         }
 
         public override void PostSpawnSetup(bool respawningAfterLoad)
