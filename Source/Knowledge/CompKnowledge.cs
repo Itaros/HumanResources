@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -391,10 +391,9 @@ namespace HumanResources
             base.PostExposeData();
             if (Scribe.mode == LoadSaveMode.Saving && expertise != null)
             {
-                var e = expertise.Where(x => x.Value > 1f).GetEnumerator();
-                while (e.MoveNext())
+                foreach (var expertiseItem in expertise.Where(x => x.Value > 1f))
                 {
-                    expertise[e.Current.Key] = 1f;
+                    expertise[expertiseItem.Key] = 1f;
                 }
             }
             Scribe_Collections.Look(ref expertise, "Expertise");
