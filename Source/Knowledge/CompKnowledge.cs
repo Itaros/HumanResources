@@ -359,9 +359,10 @@ namespace HumanResources
 
         private void UpdatePlantCache()
         {
-            m_localCacheAllKnownPlants = proficientPlants == null 
-                ? UniversalCrops.ToList() 
-                : proficientPlants.Concat(UniversalCrops).ToList();
+            if(ModBaseHumanResources.OptimizationExperimentalGrowingCache)
+                m_localCacheAllKnownPlants = proficientPlants == null 
+                    ? UniversalCrops.ToList() 
+                    : proficientPlants.Concat(UniversalCrops).ToList();
         }
         
         public bool LearnTech(ResearchProjectDef tech)
