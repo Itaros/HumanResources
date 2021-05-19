@@ -80,19 +80,29 @@ namespace HumanResources
         protected virtual IEnumerable<ThingDef> StudyWeapons(Bill bill, Pawn pawn)
         {
             CompKnowledge techComp = pawn.TryGetComp<CompKnowledge>();  
-            IEnumerable<ThingDef> known = techComp.knownWeapons;
-            IEnumerable<ThingDef> craftable = techComp.craftableWeapons;
-            IEnumerable<ThingDef> allowed = unlocked.weapons.Concat(craftable);
-            IEnumerable<ThingDef> chosen = bill.ingredientFilter.AllowedThingDefs;
-            IEnumerable<ThingDef> viable = chosen.Intersect(allowed).Except(known);
-            IEnumerable<ThingDef> unavailable = chosen.Except(viable);
-            if (viable.EnumerableNullOrEmpty() && !unavailable.EnumerableNullOrEmpty())
+            
+            var missing = techComp.MissingWeapons;
+            
+            // Bill-based discriminator
+            IEnumerable<ThingDef> chosenByBill = bill.ingredientFilter.AllowedThingDefs;
+            IEnumerable<ThingDef> candidatesToLearn = missing.Intersect(chosenByBill);
+            
+            // Pawn has a lot to learn, but this learning device just can't provide
+            /*
+             * We need to show list of weapons which are:
+             * 1. Found to be trainable by bill provider
+             * 2. Not allowed to be trained by pawn
+             */
+            if (candidatesToLearn.EnumerableNullOrEmpty())
             {
+                // Weapons already known, but beyond pawn understanding
+                // PERFORMANCE: This is actually is VERY slow. This pathway triggers everytime there is 
+                var newWeaponsThisOffers = chosenByBill.Except(techComp.KnownWeaponsCached);
                 string thoseWeapons = "ThoseWeapons".Translate();
-                string listing = (unavailable.EnumerableCount() < 10) ? unavailable.Select(x => x.label).ToStringSafeEnumerable() : thoseWeapons;
+                string listing = (newWeaponsThisOffers.EnumerableCount() < 10) ? newWeaponsThisOffers.Select(x => x.label).ToStringSafeEnumerable() : thoseWeapons;
                 JobFailReason.Is("MissingRequirementToLearnWeapon".Translate(pawn, listing));
             }
-            return viable;
+            return candidatesToLearn;
         }
 
         private Job StartBillJob(Pawn pawn, IBillGiver giver, Bill bill)

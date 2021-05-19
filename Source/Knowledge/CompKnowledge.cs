@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -70,7 +70,16 @@ namespace HumanResources
             }
         }
 
-        public List<ThingDef> knownWeapons => proficientWeapons.Concat(UniversalWeapons).Concat(techLevelWeapons).ToList();
+        private readonly HashSet<ThingDef> m_knownWeaponsCached = new HashSet<ThingDef>();
+        public HashSet<ThingDef> KnownWeaponsCached
+        {
+            get
+            {
+                if (ModBaseHumanResources.OptimizationExperimentalWeaponCache)
+                    return m_knownWeaponsCached;
+                return GetKnownWeaponsHot().ToHashSet();
+            }
+        }
 
         public IEnumerable<ThingDef> techLevelWeapons => SimpleWeapons.Where(x => x.techLevel <= startingTechLevel);
 
