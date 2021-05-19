@@ -1,4 +1,4 @@
-using HarmonyLib;
+﻿using HarmonyLib;
 using HugsLib;
 using HugsLib.Settings;
 using RimWorld;
@@ -30,6 +30,13 @@ namespace HumanResources
             FullStartupReport,
             IndividualTechsReport;
         public static FieldInfo ScenPartThingDefInfo = AccessTools.Field(typeof(ScenPart_ThingCount), "thingDef");
+
+        private static readonly SpecialRegistryCache _specialRegistry = new SpecialRegistryCache();
+        /**
+         * Registry with caches useful for the mod
+         */
+        public static IImmutableSpecialRegistryCache SpecialRegistry => _specialRegistry; 
+        
         public static List<ThingDef> 
             SimpleWeapons = new List<ThingDef>(),
             UniversalCrops = new List<ThingDef>(),

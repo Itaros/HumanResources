@@ -333,6 +333,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\IImmutableSpecialRegistryCache.cs" />
+    <Compile Include="Base\SpecialRegistryCache.cs" />
     <Compile Include="Base\TechDatabase.cs" />
     <Compile Include="Base\TechTracker.cs" />
     <Compile Include="Books+Buildings\Building_NetworkServer.cs" />

@@ -17,7 +17,7 @@ namespace HumanResources
 
         public static bool ShouldReserve(Pawn p, LocalTargetInfo target, int maxPawns = 1, int stackCount = -1, ReservationLayerDef layer = null, bool ignoreOtherReservations = false)
         {
-            if (p.TryGetComp<CompKnowledge>().knownWeapons.Contains(target.Thing.def))
+            if (p.TryGetComp<CompKnowledge>().KnownWeaponsCached.Contains(target.Thing.def))
             {
                 return false;
             }
@@ -67,7 +67,7 @@ namespace HumanResources
 
         public override bool ShouldSkip(Pawn pawn, bool forced = false)
         {
-            IEnumerable<ThingDef> knownWeapons = pawn.TryGetComp<CompKnowledge>()?.knownWeapons;
+            IEnumerable<ThingDef> knownWeapons = pawn.TryGetComp<CompKnowledge>()?.KnownWeaponsCached;
             if (knownWeapons != null)
             {
                 IEnumerable<ThingDef> available = unlocked.weapons;
