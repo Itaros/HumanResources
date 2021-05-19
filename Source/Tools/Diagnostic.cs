@@ -5,6 +5,10 @@ namespace HumanResources
 {
     public static class Diagnostic
     {
+        /**
+         * Prints enumerable list.
+         * Uses ToString() coercion. Less paranoid than Verse.Gen.ToStringSafeEnumerable(...)
+         */
         public static string ExpandEnumerableSafelyToString(IEnumerable<object> sink)
         {
             if (sink == null)
@@ -16,7 +20,7 @@ namespace HumanResources
                     b.Append(", ");
                 b.Append(item);
             }
-            return $"[{b.ToString()}]";
+            return $"[{b}]";
         }
     }
 }
